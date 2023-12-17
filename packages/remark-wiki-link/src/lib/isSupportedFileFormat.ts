@@ -11,6 +11,11 @@ export const supportedFileFormats = [
   "avif",
   "ico",
   "pdf",
+  "mp4", 
+  "webm",
+  "ogv",
+  "mov",
+  "mkv"
 ];
 
 export const isSupportedFileFormat = (filePath: string): [boolean, string] => {

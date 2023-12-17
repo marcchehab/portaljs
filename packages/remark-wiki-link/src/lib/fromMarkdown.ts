@@ -150,6 +150,14 @@ function fromMarkdown(opts: FromMarkdownOptions = {}) {
           width: "100%",
           src: `${hrefTemplate(link)}#toolbar=0`,
         };
+      } else if (["mp4", "webm", "ogv", "mov", "mkv"].includes(format)) {
+        wikiLink.data.hName = "video";
+        wikiLink.data.hProperties = {
+          className: classNames,
+          controls: true,
+          alt: displayName,
+        };
+        wikiLink.data.hChildren = [{ type: "element", tagName: "source", properties: { src: hrefTemplate(link) }, children: [] }];
       } else {
         wikiLink.data.hName = "img";
         wikiLink.data.hProperties = {
