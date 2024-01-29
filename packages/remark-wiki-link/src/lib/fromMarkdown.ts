@@ -124,6 +124,7 @@ function fromMarkdown(opts: FromMarkdownOptions = {}) {
 
     if (isEmbed) {
       const [isSupportedFormat, format] = isSupportedFileFormat(target);
+
       if (!isSupportedFormat) {
         // Temporarily render note transclusion as a regular wiki link
         if (!format) {
@@ -150,12 +151,25 @@ function fromMarkdown(opts: FromMarkdownOptions = {}) {
           width: "100%",
           src: `${hrefTemplate(link)}#toolbar=0`,
         };
-      } else {
-        wikiLink.data.hName = "img";
+      } else if (["mp4", "webm", "ogv", "mov", "mkv"].includes(format)) {
+        wikiLink.data.hName = "video";
         wikiLink.data.hProperties = {
           className: classNames,
-          src: hrefTemplate(link),
+          controls: true,
           alt: displayName,
+          
+        };
+        wikiLink.data.hChildren = [{ type: "element", tagName: "source", properties: { src: hrefTemplate(link) }, children: [] }];
+      } else {
+        const [name, invert, width] = displayName.split("-");
+        const classes = invert == "invert" ? classNames + " invert" : classNames;
+        const src = link.startsWith("/assets/") ? link : `/assets/${link}`; // TODO this is ugly
+        wikiLink.data.hName = "img";
+        wikiLink.data.hProperties = {
+          className: classes,
+          src: src,
+          alt: name,
+          width: width ?? ""
         };
       }
     } else {
